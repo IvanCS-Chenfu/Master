@@ -1,0 +1,31 @@
+component Spring
+% Muelle Torsor
+% Este bloque modela el comportamiento de un muelle torsor
+
+    parameters
+    k = { 10, 'N*m/rad' }; % Spring rate
+    end
+
+    nodes
+    r = foundation.mechanical.rotational.rotational; % R:left
+    c = foundation.mechanical.rotational.rotational; % C:right
+    end
+
+    variables
+    theta = { 0, 'rad' }; % Deformation across
+    torque = { 0, 'N*m' }; % Torque through
+    w = { 0, 'rad/s' }; % Velocity across
+    end
+
+    branches
+    torque : r.t -> c.t;
+    end
+
+    equations
+    assert(k>0)
+    w == r.w - c.w;
+    torque == k * theta;
+    w == theta.der;
+    end
+    
+end
