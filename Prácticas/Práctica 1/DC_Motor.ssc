@@ -1,0 +1,58 @@
+component DC_Motor
+% Simple Simscape component
+
+parameters
+    res = { 10.0, 'Ohm' }; % Rotor Resistance
+    l = { 1e-2, 'H' }; % Rotor Inductance
+    J = { 1e-2, 'kg*m^2' };% Inertia
+    bEMF = { 1e-1, 'V/(rad/s)' }; % Back EMF constant
+end
+
+outputs
+    V = {0.0,'V'}; % e_m: left
+end
+
+nodes
+   vmas = foundation.electrical.electrical; % V+: left
+   vmenos = foundation.electrical.electrical; % V-: left
+   R = foundation.mechanical.rotational.rotational; % R:right
+   C = foundation.mechanical.rotational.rotational; % C:right
+   
+end
+
+variables
+    e_o = { 0, 'V'};
+    e_m = { 0, 'V'}; % VMotor across
+    %v_RL = { 0, 'V'}; % VCaida_RL across
+    w = { 0, 'rad/s' };     % Angular velocity
+    t = { 0, 'N*m' };       % Torque
+    %w_dot = { 0, 'rad/s^2' }; % Aceleracion across
+    i = {0 , 'A'}; % Intensidad through
+end
+
+components(ExternalAccess=observe)
+   motorInertia = foundation.mechanical.rotational.inertia(inertia = J);
+end
+
+connections
+    connect(motorInertia.I, R)
+end
+
+branches
+    i : vmas.i -> vmenos.i
+    t : R.t -> C.t;
+end
+
+equations
+    e_o == vmas.v - vmenos.v;
+    w == R.w - C.w;
+    e_m == i*res + l*i.der
+    V == e_o - e_m;
+
+    e_o == bEMF*w + e_m;
+    t == -bEMF*i
+
+end
+
+
+end
