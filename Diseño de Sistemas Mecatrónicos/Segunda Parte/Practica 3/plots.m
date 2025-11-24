@@ -1,0 +1,19 @@
+figure
+PV = plot(out.V.Data, out.P.Data);
+hold on
+V = PV.XData;
+P = PV.YData;
+
+[P_max, i] = max(P)
+
+plot(V(i),P_max, 'o')
+hold off
+
+figure
+IV = plot(out.V.Data, out.I.Data);
+hold on
+
+I = IV.YData;
+
+plot(V(i),I(i), 'o')
+hold off
