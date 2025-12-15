@@ -1,0 +1,46 @@
+component Componente
+% Simple Simscape component
+
+parameters
+    m       = { 1,     'kg'      };   % masa
+    l       = { 0.30,  'm'       };   % longitud
+    g       = { 9.81,  'm/s^2'   };   % gravedad
+    %theta0  =  0; % condición inicial de theta
+end
+
+outputs
+    theta_out = { 0, 'rad' };
+    theta_dot_out = { 0, 'rad/s' };
+    theta_ddot_out = { 0, 'rad/s^2' };
+    tau_out = { 0, 'N*m' };
+end
+
+nodes
+    r = foundation.mechanical.rotational.rotational;  % r
+    c = foundation.mechanical.rotational.rotational;  % c
+end
+
+variables
+    w     = { 0,       'rad/s' };     % theta_dot
+    theta = { 0,  'rad'   };          % theta
+    tau   = { 0,       'N*m'   };     % tau
+end
+
+branches
+    tau : r.t -> c.t;   % variable "through" (par)
+end
+
+equations
+    w == r.w - c.w;
+
+    theta.der == w;
+
+    w.der == (tau - l*m*g*sin(theta)) / (m*l^2);
+   
+    tau_out == tau;
+    theta_out == theta;
+    theta_dot_out == w;
+    theta_ddot_out == (tau - l*m*g*sin(theta)) / (m*l^2);
+end
+
+end
