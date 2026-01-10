@@ -1,0 +1,41 @@
+[System]
+Name='ej_sugeno'
+Type='sugeno'
+Version=2.0
+NumInputs=2
+NumOutputs=1
+NumRules=4
+AndMethod='min'
+OrMethod='max'
+ImpMethod='prod'
+AggMethod='sum'
+DefuzzMethod='wtaver'
+
+[Input1]
+Name='X'
+Range=[-5 5]
+NumMFs=2
+MF1='Grande':'smf',[-1.2 1.2]
+MF2='Pequeño':'zmf',[-1.2 1.2]
+
+[Input2]
+Name='Y'
+Range=[-5 5]
+NumMFs=2
+MF1='Grande':'smf',[-5 5]
+MF2='Pequeño':'zmf',[-5 5]
+
+[Output1]
+Name='output1'
+Range=[0 1]
+NumMFs=4
+MF1='r1':'linear',[-1 1 0]
+MF2='r2':'linear',[0 -1 3]
+MF3='r3':'linear',[-1 0 3]
+MF4='r4':'linear',[1 1 2]
+
+[Rules]
+2 2, 1 (1) : 1
+2 1, 2 (1) : 1
+1 2, 3 (1) : 1
+1 1, 4 (1) : 1
